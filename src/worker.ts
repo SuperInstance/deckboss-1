@@ -1,414 +1,268 @@
-const HTML = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeckBoss - Presentation Platform</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --accent: #f59e0b;
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --text: #f1f5f9;
-            --text-muted: #94a3b8;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        
-        /* Navigation */
-        nav {
-            padding: 1.5rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--accent);
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-        
-        .logo:hover {
-            opacity: 0.9;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-        
-        .nav-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-link:hover {
-            color: var(--accent);
-        }
-        
-        .cta-button {
-            background: var(--accent);
-            color: var(--bg);
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: transform 0.3s, opacity 0.3s;
-            display: inline-block;
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            opacity: 0.95;
-        }
-        
-        /* Hero */
-        .hero {
-            padding: 5rem 0;
-            text-align: center;
-        }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
-        
-        /* Features */
-        .features {
-            padding: 5rem 0;
-            background: rgba(0,0,0,0.2);
-        }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 1rem;
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        /* Pricing */
-        .pricing {
-            padding: 5rem 0;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .pricing-card {
-            background: var(--surface);
-            padding: 2.5rem 2rem;
-            border-radius: 1rem;
-            text-align: center;
-            position: relative;
-            transition: transform 0.3s;
-        }
-        
-        .pricing-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .pricing-card.popular {
-            border: 2px solid var(--accent);
-        }
-        
-        .popular-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            color: var(--bg);
-            padding: 0.5rem 1.5rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-        
-        .price {
-            font-size: 3rem;
-            font-weight: 700;
-            margin: 1.5rem 0;
-            color: var(--accent);
-        }
-        
-        .price span {
-            font-size: 1rem;
-            color: var(--text-muted);
-        }
-        
-        .pricing-features {
-            list-style: none;
-            margin: 2rem 0;
-        }
-        
-        .pricing-features li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        /* Footer */
-        footer {
-            padding: 3rem 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            color: var(--text-muted);
-        }
-        
-        /* Mobile */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .mobile-menu {
-                display: block;
-                background: none;
-                border: none;
-                color: var(--text);
-                font-size: 1.5rem;
-                cursor: pointer;
-            }
-            
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (min-width: 769px) {
-            .mobile-menu {
-                display: none;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="container nav-content">
-            <a href="#" class="logo">DeckBoss</a>
-            <div class="nav-links">
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#pricing" class="nav-link">Pricing</a>
-                <a href="#" class="nav-link">Documentation</a>
-                <a href="#" class="cta-button">Get Started</a>
-            </div>
-            <button class="mobile-menu">☰</button>
-        </div>
-    </nav>
-
-    <section class="hero">
-        <div class="container">
-            <h1>Create Presentations That Captivate</h1>
-            <p>DeckBoss gives teams the tools to build, share, and present stunning decks that win clients and inspire action.</p>
-            <a href="#pricing" class="cta-button">Start Free Trial</a>
-        </div>
-    </section>
-
-    <section id="features" class="features">
-        <div class="container">
-            <h2 class="section-title">Powerful Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3>Smart Templates</h3>
-                    <p>Professionally designed templates that adapt to your content automatically.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🤝</div>
-                    <h3>Team Collaboration</h3>
-                    <p>Real-time editing and comments for seamless team workflow.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Data Visualization</h3>
-                    <p>Transform complex data into clear, engaging charts and graphs.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="pricing" class="pricing">
-        <div class="container">
-            <h2 class="section-title">Simple Pricing</h2>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Free</h3>
-                    <div class="price">$0<span>/month</span></div>
-                    <ul class="pricing-features">
-                        <li>3 Presentations</li>
-                        <li>Basic Templates</li>
-                        <li>1 GB Storage</li>
-                        <li>Community Support</li>
-                    </ul>
-                    <a href="#" class="cta-button">Get Started</a>
-                </div>
-                <div class="pricing-card popular">
-                    <div class="popular-badge">Most Popular</div>
-                    <h3>Pro</h3>
-                    <div class="price">$9<span>/month</span></div>
-                    <ul class="pricing-features">
-                        <li>50 Presentations</li>
-                        <li>All Templates</li>
-                        <li>10 GB Storage</li>
-                        <li>Priority Support</li>
-                    </ul>
-                    <a href="#" class="cta-button">Try Free for 14 Days</a>
-                </div>
-                <div class="pricing-card">
-                    <h3>Team</h3>
-                    <div class="price">$29<span>/month</span></div>
-                    <ul class="pricing-features">
-                        <li>Unlimited Presentations</li>
-                        <li>Custom Templates</li>
-                        <li>100 GB Storage</li>
-                        <li>Dedicated Support</li>
-                    </ul>
-                    <a href="#" class="cta-button">Contact Sales</a>
-                </div>
-                <div class="pricing-card">
-                    <h3>Enterprise</h3>
-                    <div class="price">$99<span>/month</span></div>
-                    <ul class="pricing-features">
-                        <li>Everything in Team</li>
-                        <li>SAML SSO</li>
-                        <li>Custom Branding</li>
-                        <li>24/7 Phone Support</li>
-                    </ul>
-                    <a href="#" class="cta-button">Contact Sales</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p>© 2024 DeckBoss. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.875rem;">Presentation platform for modern teams</p>
-        </div>
-    </footer>
-
-    <script>
-        // Minimal mobile menu toggle
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        });
-        
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-    </script>
-</body>
-</html>
-`;
-
 export default {
-  async fetch(request) {
+  async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     
-    // Health endpoint
-    if (url.pathname === '/health') {
-      return new Response(
-        JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache'
-          }
-        }
-      );
+    if (url.pathname === "/health") {
+      return new Response(JSON.stringify({status: "ok"}), {
+        headers: {"Content-Type": "application/json"}
+      });
+    }
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deckboss.ai - Technician AI for Edge Robotics</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --bg: #0a0a0a; --text: #f8fafc; --accent: #f59e0b; --card: #1a1a1a; }
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+    header { padding: 1rem 0; border-bottom: 1px solid #333; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+    nav { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--text); text-decoration: none; font-weight: 500; }
+    .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+    .mobile-menu { display: none; flex-direction: column; gap: 1rem; padding: 1rem 0; }
+    .mobile-menu.active { display: flex; }
+    section { padding: 4rem 0; }
+    .hero { text-align: center; padding: 6rem 0; }
+    .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; color: var(--accent); }
+    .hero p { font-size: 1.25rem; max-width: 700px; margin: 0 auto 2rem; color: #cbd5e1; }
+    .cta-button { 
+      display: inline-block; 
+      background: var(--accent); 
+      color: var(--bg); 
+      padding: 0.75rem 2rem; 
+      border-radius: 0.5rem; 
+      text-decoration: none; 
+      font-weight: bold; 
+      font-size: 1.1rem; 
+    }
+    .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: var(--accent); }
+    .features-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 2rem; 
+      margin-top: 2rem; 
+    }
+    .card { 
+      background: var(--card); 
+      padding: 2rem; 
+      border-radius: 1rem; 
+      border: 1px solid #333; 
+    }
+    .card h3 { color: var(--accent); margin-bottom: 1rem; font-size: 1.25rem; }
+    .hardware-grid, .pricing-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+      gap: 2rem; 
+      margin-top: 2rem; 
+    }
+    .price-card, .hardware-card { 
+      background: var(--card); 
+      padding: 2rem; 
+      border-radius: 1rem; 
+      text-align: center; 
+      border: 1px solid #333; 
+    }
+    .price { font-size: 2rem; color: var(--accent); font-weight: bold; margin: 1rem 0; }
+    footer { 
+      background: #111; 
+      padding: 3rem 0; 
+      margin-top: 4rem; 
+      text-align: center; 
+      border-top: 1px solid #333; 
+    }
+    .footer-links { 
+      display: flex; 
+      justify-content: center; 
+      flex-wrap: wrap; 
+      gap: 2rem; 
+      margin: 2rem 0; 
+    }
+    .footer-links a { color: var(--accent); text-decoration: none; }
+    .copyright { color: #94a3b8; margin-top: 2rem; }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .hero h1 { font-size: 2.5rem; }
+      .section-title { font-size: 2rem; }
+      .features-grid, .hardware-grid, .pricing-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">Deckboss.ai</div>
+        <div class="nav-links">
+          <a href="#home">Home</a>
+          <a href="#features">Features</a>
+          <a href="#hardware">Hardware</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#docs">Docs</a>
+        </div>
+        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+      </nav>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" onclick="toggleMenu()">Home</a>
+        <a href="#features" onclick="toggleMenu()">Features</a>
+        <a href="#hardware" onclick="toggleMenu()">Hardware</a>
+        <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+        <a href="#docs" onclick="toggleMenu()">Docs</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="container">
+      <h1>Design Your Robot Brain</h1>
+      <p>AI assistant for edge robotics and IoT systems. Describe what you need, get wiring diagrams and parts lists.</p>
+      <a href="#features" class="cta-button">Start Building</a>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">Features</h2>
+      <div class="features-grid">
+        <div class="card">
+          <h3>Photo-to-Wiring</h3>
+          <p>Take photos of hardware, get connection diagrams</p>
+        </div>
+        <div class="card">
+          <h3>IoT Builder</h3>
+          <p>Design sensor networks, get firmware suggestions</p>
+        </div>
+        <div class="card">
+          <h3>BYOK</h3>
+          <p>Bring your own API keys or try free with cloud services</p>
+        </div>
+        <div class="card">
+          <h3>Hand Off to Cocapn</h3>
+          <p>When done building, deploy to hardware</p>
+        </div>
+        <div class="card">
+          <h3>TUI in Repo</h3>
+          <p>Opens in any git repo, works on phone or terminal</p>
+        </div>
+        <div class="card">
+          <h3>Offline Design</h3>
+          <p>Works on the boat, syncs when connected</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hardware">
+    <div class="container">
+      <h2 class="section-title">Hardware</h2>
+      <div class="hardware-grid">
+        <div class="hardware-card">
+          <h3>Deckboss Nano</h3>
+          <p class="price">$299</p>
+          <p>Raspberry Pi 5</p>
+        </div>
+        <div class="hardware-card">
+          <h3>Standard</h3>
+          <p class="price">$599</p>
+          <p>NVIDIA Jetson</p>
+        </div>
+        <div class="hardware-card">
+          <h3>Pro</h3>
+          <p class="price">$1199</p>
+          <p>2x NVIDIA Jetson</p>
+        </div>
+        <div class="hardware-card">
+          <h3>Enterprise</h3>
+          <p class="price">$1499</p>
+          <p>4x Raspberry Pi 5</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="container">
+      <h2 class="section-title">Pricing</h2>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Free</h3>
+          <p class="price">$0</p>
+          <p>5 designs/day</p>
+        </div>
+        <div class="price-card">
+          <h3>Standard</h3>
+          <p class="price">$9/mo</p>
+          <p>Unlimited designs</p>
+        </div>
+        <div class="price-card">
+          <h3>Pro</h3>
+          <p class="price">$29/mo</p>
+          <p>White-label</p>
+        </div>
+        <div class="price-card">
+          <h3>Enterprise</h3>
+          <p class="price">$99/seat</p>
+          <p>Custom deployment</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="https://deckboss.ai">Deckboss.ai</a>
+        <a href="https://deckboss.net">Deckboss.net</a>
+        <a href="https://cocapn.ai">Cocapn.ai</a>
+        <a href="https://cocapn.com">Cocapn.com</a>
+        <a href="https://capitaine.ai">Capitaine.ai</a>
+        <a href="https://github.com/Lucineer">github.com/Lucineer</a>
+      </div>
+      <p class="copyright">© 2024 Deckboss.ai - Technician AI for Edge Robotics</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("mobileMenu").classList.toggle("active");
     }
     
-    // Main landing page
-    return new Response(HTML, {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener("click", function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute("href");
+        if (targetId === "#") return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: "smooth"
+          });
+          document.getElementById("mobileMenu").classList.remove("active");
+        }
+      });
+    });
+  </script>
+</body>
+</html>`;
+
+    return new Response(html, {
       headers: {
-        'Content-Type': 'text/html;charset=UTF-8',
-        'Content-Security-Policy': "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'",
-        'X-Frame-Options': 'DENY',
-        'X-Content-Type-Options': 'nosniff'
+        "Content-Type": "text/html;charset=UTF-8",
+        "Content-Security-Policy": "default-src 'self'; frame-ancestors 'none';",
+        "X-Frame-Options": "DENY"
       }
     });
   }
