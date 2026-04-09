@@ -7,21 +7,18 @@ dependencies = [
     "rich>=13.0",
     "httpx>=0.25.0",
     "pyyaml>=6.0",
-    "gitpython>=3.1.40",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
-stt = ["openai-whisper>=20231117"]
+stt = ["openai-whisper"]
 tts = ["piper-tts"]
 telegram = ["python-telegram-bot>=20.0"]
 discord = ["discord.py>=2.3.0"]
-ollama = []  # ollama is a separate binary
-vllm = []   # vllm is a separate install
 
 [project.scripts]
 deckboss = "deckboss.main:cli"
 
 [build-system]
 requires = ["setuptools>=68.0"]
-build-backend = "setuptools.backends._legacy:_Backend"
+build-backend = "setuptools.build_meta"
