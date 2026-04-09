@@ -42,12 +42,22 @@ def pick_best_local_model(models: list) -> str:
         return "phi3:mini"
 
     # Priority order: prefer reasoning > coding > general > tiny
+    # Exclude embedding models
+    non_generative = ["embed", "bge", "e5", "nomic-embed"]
+    generative = [m for m in models if not any(k in m.lower() for k in non_generative)]
+    if not generative:
+        return models[0] if models else "phi3:mini"
+    models = generative
+
+    # Prefer larger parameter counts in model names
     priorities = [
-        ("deepseek", "r1"),  # DeepSeek Reasoner
-        ("qwen3.5",),        # Qwen 3.5 (great general)
-        ("deepseek", "v3"),  # DeepSeek V3
+        ("3.5", "4b"),      # Qwen 3.5 4B or similar
+        ("3.5", "2b"),      # Qwen 3.5 2B
+        ("qwen3.5",),        # Any Qwen 3.5
+        ("deepseek", "r1"), # DeepSeek Reasoner
+        ("nemotron", "4b"), # Nemotron 4B
+        ("nemotron",),       # Any Nemotron
         ("qwen3",),          # Qwen 3
-        ("nemotron",),       # Nvidia Nemotron
         ("moondream",),      # Moondream (vision)
         ("phi3",),           # Phi-3
     ]
